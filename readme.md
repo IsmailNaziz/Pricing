@@ -36,7 +36,7 @@ an ambiguity to chose between the two values)
 
 # Examples
 ## Json example
-###These are valid jsons of input for the service:   
+### These are valid jsons of input for the service:     
 {  
 'absolute_variation': 5,  
 'relative_variation': 2.5  
@@ -56,7 +56,7 @@ an ambiguity to chose between the two values)
   }
 
 
-###These are invalid jsons:   
+### These are invalid jsons:     
 {   
 'dummy_key': 54  
   }  
@@ -109,7 +109,7 @@ prices are always ints (No units)
 dates are all in the same format dd/mm/yyyy  
 ids are always ints  
 
-#Improvements 
+# Improvements 
 In order to add new data, we can process new file to keep only 3 rows per product id:   
 start date, before last date, end date  
 there for we can work by ingesting data progressively without having to recompute everything  
