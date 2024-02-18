@@ -9,6 +9,9 @@ To be very precise, there is an ambiguity in the way the question was asked. I m
 modes, and they are not selected by the user. However, for purpose of lineage, in the output, I will specify how the 
 dates are selected (from_start_delta or latest_delta).
 
+# Assumption 
+TODO: to be filled
+
 # How to run it: 
 TODO: to be filled
 
@@ -28,10 +31,10 @@ The user provides:
 
 ## Formal output 
 {  
-'product_id': {'type': 'absolute_variation', 'value': absolute_variation}    
+'product_id': {'variation_type': 'absolute_variation', 'value': absolute_variation}    
 ...  
   }
-type => enum of ['absolute_variation', 'relative_variation'], one of the two values that matched the criteria (there is 
+variation_type => enum of ['absolute_variation', 'relative_variation'], one of the two values that matched the criteria (there is 
 an ambiguity to chose between the two values)
 
 # Examples
@@ -98,9 +101,9 @@ For an input of this type:
 }
 
 The output will be   
-{'A': {'type': 'absolute_variation', 'value': 5}    
+{'A': {'variation_type': 'absolute_variation', 'value': 5}    
 or    
-{'A': {'type': 'relative_variation', 'value': 25}  
+{'A': {'variation_type': 'relative_variation', 'value': 25}  
 
 
 # Remarks
