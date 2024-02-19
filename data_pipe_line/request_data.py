@@ -18,7 +18,6 @@ class RequestData:
     def format_df_for_response(self, df: pd.DataFrame) -> ProductsVariation:
         pass
 
-
     def filter_from_variation_and_value(self, variation_mode: str, value: float) -> pd.DataFrame:
         pass
 
@@ -29,7 +28,7 @@ class RequestData:
 
         if metric_request.absolute_variation:
             df_absolute = self.filter_from_variation_and_value(variation_mode='absolute',
-                                                          value=metric_request.absolute_variation)
+                                                               value=metric_request.absolute_variation)
         if metric_request.relative_variation:
             df_relative = self.filter_from_variation_and_value(variation_mode='relative',
                                                                value=metric_request.relative_variation)

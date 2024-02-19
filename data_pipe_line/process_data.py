@@ -15,7 +15,7 @@ class ProcessData:
     @classmethod
     def filter_dates(cls, df: pd.DataFrame) -> pd.DataFrame:
         """
-        Filters self.data
+        Filters df
         to keep only a maximum of 3 rows per product
         first, before last, last date
         :return: None
@@ -32,7 +32,7 @@ class ProcessData:
 
 
     @classmethod
-    def export_processed_df(cls, df):
+    def export_processed_df(cls, df) -> None:
         """
         :return:
         """

@@ -4,6 +4,6 @@ from models import MetricsRequest, ProductsVariation
 
 app = FastAPI()
 
-@app.get("/")
+@app.post("/products-variation")
 def index(data: MetricsRequest) -> ProductsVariation:
     pass

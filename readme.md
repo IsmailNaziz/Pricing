@@ -88,11 +88,11 @@ to set rules of parsing)
 ## Functional example
 Assuming this is the data   
 activity_date product price  
-01/01/2021 A 10.00  
-01/02/2021 A 20.00  
-01/03/2021 A 25.00  
+01/01/2021 1 10.00  
+01/02/2021 1 20.00  
+01/03/2021 1 25.00  
 
-where A is the product id. 
+where 1 is the product id. 
 
 For an input of this type:
 {
@@ -101,9 +101,9 @@ For an input of this type:
 }
 
 The output will be   
-{'A': {'variation_type': 'absolute_variation', 'value': 5}    
+{1: {'variation_type': 'absolute_variation', 'value': 5}}    
 or    
-{'A': {'variation_type': 'relative_variation', 'value': 25}  
+{1: {'variation_type': 'relative_variation', 'value': 25}}
 
 
 # Remarks
