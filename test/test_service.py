@@ -50,7 +50,7 @@ class TestService(TestCase):
 
         metrics_request_data = {
             'absolute_variation': 5,
-            'relative_variation': 25
+            'relative_variation': -1.5
         }
         metrics_request = MetricsRequest(**metrics_request_data)
 
