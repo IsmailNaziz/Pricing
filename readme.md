@@ -10,7 +10,8 @@ modes, and they are not selected by the user. However, for purpose of lineage, i
 dates are selected (from_start_delta or latest_delta).
 
 # Assumption 
-TODO: to be filled
+percentage is rounded to 2 for processing
+
 
 # How to run it: 
 TODO: to be filled

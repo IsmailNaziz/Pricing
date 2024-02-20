@@ -7,6 +7,10 @@ class VariationType(Enum):
     ABSOLUTE_VARIATION = 'absolute_variation'
     RELATIVE_VARIATION = 'relative_variation'
 
+class DeltaType(Enum):
+    FROM_START_DELTA = 'from_start_delta'
+    LATEST_DELTA = 'latest_delta'
+
 
 class MetricsRequest(BaseModel):
     absolute_variation: Optional[float]
@@ -20,6 +24,7 @@ class MetricsRequest(BaseModel):
 
 class Variation(BaseModel):
     variation_type: VariationType
+    delta_type: DeltaType
     value: float
 
 
