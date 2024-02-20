@@ -1,3 +1,4 @@
+import os
 import unittest
 from pathlib import Path
 from unittest import TestCase
@@ -11,10 +12,11 @@ from data_pipe_line.request_data import RequestData
 
 
 def mock_sample_processed_data():
-    return pd.read_csv(Path(r'test/test_data/test_processed_data.csv'), sep=";")
+    return pd.read_csv(Path(os.path.dirname(__file__)) / 'test_data/test_sample_processed_data.csv')
+
 
 def mock_processed_data():
-    return pd.read_csv(Path(r'test/test_data/test_processed_data.csv'), sep=";")
+    return pd.read_csv(Path(os.path.dirname(__file__)) / 'test_data/test_processed_data.csv')
 
 
 class TestService(TestCase):
@@ -43,7 +45,7 @@ class TestService(TestCase):
         )
 
 
-    @patch.object(RequestData, 'df', side_effect=mock_sample_processed_data())
+    @patch.object(RequestData, 'df', side_effect=mock_processed_data())
     def test_non_reg_products_variation(self):
 
         metrics_request_data = {

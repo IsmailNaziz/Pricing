@@ -5,11 +5,12 @@ import pandas as pd
 
 @dataclass
 class ProcessData:
-    path: Path
-    df: pd.DataFrame
+    input_path: Path
+    output_path: Path
+    df: pd.DataFrame = pd.DataFrame()
 
     def __post_init__(self):
-        self.df = pd.read_csv(self.path, sep=';')
+        self.df = pd.read_csv(self.input_path, sep=';')
 
 
     @classmethod
@@ -20,28 +21,20 @@ class ProcessData:
         first, before last, last date
         :return: None
         """
-        pass
+        return pd.DataFrame()
 
     @classmethod
     def compute_variation(cls, df: pd.DataFrame) -> pd.DataFrame:
         """
-        :param df: 
-        :return: 
+        explain how it works
         """
-        pass
+        return pd.DataFrame()
 
-
-    @classmethod
-    def export_processed_df(cls, df) -> None:
-        """
-        :return:
-        """
-        pass
 
     def run(self):
         res_df = self.filter_dates(self.df)
         res_df = self.compute_variation(res_df)
-        self.export_processed_df(res_df)
+        res_df.to_csv(self.output_path, sep=';', index=False)
 
 
 
