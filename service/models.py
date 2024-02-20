@@ -24,8 +24,8 @@ class MetricsRequest(BaseModel):
 
 class Variation(BaseModel):
     variation_type: VariationType
-    delta_type: DeltaType
     value: float
+    # delta_type: DeltaType maybe add it later
 
 
 class ProductsVariation(BaseModel):

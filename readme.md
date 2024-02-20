@@ -102,7 +102,7 @@ For an input of this type:
 }
 
 The output will be   
-{1: {'variation_type': 'absolute_variation', 'value': 5}}    
+{1: {'variation_type': 'absolute_variation', 'value': 5, '''}}    
 or    
 {1: {'variation_type': 'relative_variation', 'value': 25}}
 
