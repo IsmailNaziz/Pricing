@@ -15,9 +15,16 @@ class TestDataPipeLine(TestCase):
     def setUp(self) -> None:
         self.date_format = '%d/%m/%Y'
 
-    
+    @classmethod
+    def post_process(cls, df: pd.DataFrame) -> pd.DataFrame:
+        # post processed for comparison
+        df['new_index'] = df['product'].astype(str) + '_' + df['activity_date'].astype(str)
+        df = df.set_index('new_index')
+        df = df.sort_index()
+        return df
+
     def test_filter_dates(self):
-        data = {
+        data = [
             {
                 'activity_date': datetime.strptime('01/10/2021', self.date_format),
                 'product': 1,
@@ -43,29 +50,32 @@ class TestDataPipeLine(TestCase):
                 'product': 1,
                 'price': 28
             }
-        }
-        expected_data = {
+        ]
+        expected_data = [
             {
                 'activity_date': datetime.strptime('01/10/2021', self.date_format),
                 'product': 1,
-                'price': 10
+                'price': 10,
             },
             {
                 'activity_date': datetime.strptime('01/11/2021', self.date_format),
                 'product': 1,
-                'price': 28
+                'price': 28,
             },
             {
                 'activity_date': datetime.strptime('12/2/2022', self.date_format),
                 'product': 1,
-                'price': 16
+                'price': 16,
             },
-        }
-
+        ]
+        cols_to_compare = ['activity_date', 'product', 'price']
         expected_output_df = pd.DataFrame(expected_data)
+        expected_output_df = self.post_process(expected_output_df)
         df = pd.DataFrame(data)
         current_df = ProcessData.filter_dates(df)
-        self.assertTrue(expected_output_df.equals(current_df), "DataFrames are equal")
+        current_df = self.post_process(current_df)
+        current_df = current_df[cols_to_compare]
+        self.assertTrue(expected_output_df.equals(current_df))
 
 
     def test_compute_variation_empty_data(self):

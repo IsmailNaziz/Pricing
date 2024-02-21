@@ -21,7 +21,17 @@ class ProcessData:
         first, before last, last date
         :return: None
         """
-        return pd.DataFrame()
+        if df.empty:
+            return df
+        res_df = pd.DataFrame()
+        for id_product, sub_df in df.groupby(by='product'):
+            sub_df["rank"] = sub_df["activity_date"].rank(method='dense')
+            # depending on the size of sub_df, we select indexes to keep: [-2,-1,0], [-1,0], [0]
+            idx_rank_to_keep = [i for i in range(-min(len(sub_df), 2), 1)]
+            sub_df = sub_df.iloc[idx_rank_to_keep]
+            sub_df = sub_df.drop_duplicates(subset=['product', 'activity_date'], keep='first')
+            res_df = pd.concat([res_df, sub_df], axis=1)
+        return res_df
 
     @classmethod
     def compute_variation(cls, df: pd.DataFrame) -> pd.DataFrame:

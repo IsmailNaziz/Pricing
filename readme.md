@@ -11,6 +11,8 @@ dates are selected (from_start_delta or latest_delta).
 
 # Assumption 
 percentage is rounded to 2 for processing
+A same date cannot appear twice for the same product
+
 
 
 # How to run it: 
