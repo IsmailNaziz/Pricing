@@ -7,12 +7,12 @@ The variation is calculated between 2 dates. These 2 dates are either:
 
 To be very precise, there is an ambiguity in the way the question was asked. I made the assumption of having these both 
 modes, and they are not selected by the user. However, for purpose of lineage, in the output, I will specify how the 
-dates are selected (from_start_delta or latest_delta).
+dates are selected (delta_from_start or delta_latest).
 
 # Assumption 
 percentage is rounded to 2 for processing
 A same date cannot appear twice for the same product
-from_start_delta will be applied if two rows only are provided
+delta_from_start will be applied if two rows only are provided
 
 
 
@@ -34,10 +34,10 @@ The user provides:
   where prefix is absolute or relative
 
 ## Formal output 
-{  
-'product_id': {'variation_type': 'absolute_variation', 'value': absolute_variation}    
+[  
+{'product': product_id, 'variation_type': 'absolute_variation', 'value': absolute_variation},    
 ...  
-  }
+  ]
 variation_type => enum of ['absolute_variation', 'relative_variation'], one of the two values that matched the criteria (there is 
 an ambiguity to chose between the two values)
 
@@ -105,9 +105,9 @@ For an input of this type:
 }
 
 The output will be   
-{1: {'variation_type': 'absolute_variation', 'value': 5, '''}}    
-or    
-{1: {'variation_type': 'relative_variation', 'value': 25}}
+[{'product': 1, 'variation_type': 'absolute_variation', 'value': 5, 'delta_type': 'delta_latest'}]
+or 
+['product': 1, 'variation_type': 'relative_variation', 'value': 25, 'delta_type':'delta_from_start']
 
 
 # Remarks

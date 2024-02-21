@@ -1,6 +1,5 @@
 from dataclasses import dataclass
 from pathlib import Path
-from copy import deepcopy
 import pandas as pd
 
 
@@ -42,7 +41,7 @@ class ProcessData:
         """
         if df.empty:
             return df
-        cols_to_keep = ['product', 'variation_type', 'absolute_variation', 'relative_variation']
+        cols_to_keep = ['product', 'delta_type', 'absolute_variation', 'relative_variation']
         # case 3 rows
         three_records_auto_join_df = pd.merge(df[df['rank'] == 3], df[df['rank'] != 3],
                                               on='product',
@@ -57,7 +56,7 @@ class ProcessData:
                                             how='inner')
 
         auto_join_df = pd.concat([three_records_auto_join_df, two_records_auto_join_df], axis=0)
-        auto_join_df['variation_type'] = auto_join_df['rank_y'].apply(lambda rank: 'from_start_delta' if rank == 1 else 'latest_delta')
+        auto_join_df['delta_type'] = auto_join_df['rank_y'].apply(lambda rank: 'delta_from_start' if rank == 1 else 'delta_latest')
         auto_join_df['absolute_variation'] = auto_join_df['price_x'] - auto_join_df['price_y']
         auto_join_df['relative_variation'] = round((auto_join_df['absolute_variation']*100)/auto_join_df['price_y'], 2)
         if auto_join_df.empty:

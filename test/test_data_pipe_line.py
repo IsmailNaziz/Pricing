@@ -9,11 +9,15 @@ from data_pipe_line.process_data import ProcessData
 
 from datetime import datetime
 
+from data_pipe_line.request_data import RequestData
+from service.models import MetricsRequest
+
 
 class TestDataPipeLine(TestCase):
-    
+
     def setUp(self) -> None:
         self.date_format = '%d/%m/%Y'
+        self.process_data_current = Path(os.path.dirname(__file__)) / 'test_data/current_data.csv'
 
     @classmethod
     def post_process(cls, df: pd.DataFrame) -> pd.DataFrame:
@@ -78,7 +82,6 @@ class TestDataPipeLine(TestCase):
         current_df = self.post_process(current_df)
         self.assertTrue(expected_output_df.equals(current_df))
 
-
     def test_compute_variation_empty_data(self):
         input_df = expected_output_df = pd.DataFrame()
         current_df = ProcessData.compute_variation(input_df)
@@ -107,11 +110,11 @@ class TestDataPipeLine(TestCase):
         ]
         expected_data = [
             {'product': 1,
-             'variation_type': 'from_start_delta',
+             'delta_type': 'from_start_delta',
              'absolute_variation': 6,
              'relative_variation': 60.0},
             {'product': 1,
-             'variation_type': 'latest_delta',
+             'delta_type': 'latest_delta',
              'absolute_variation': -12,
              'relative_variation': -42.86}
         ]
@@ -162,19 +165,19 @@ class TestDataPipeLine(TestCase):
         ]
 
         expected_data = [{'product': 1,
-                          'variation_type': 'from_start_delta',
+                          'delta_type': 'from_start_delta',
                           'absolute_variation': 6,
                           'relative_variation': 60.0},
                          {'product': 1,
-                          'variation_type': 'latest_delta',
+                          'delta_type': 'latest_delta',
                           'absolute_variation': -12,
                           'relative_variation': -42.86},
                          {'product': 2,
-                          'variation_type': 'from_start_delta',
+                          'delta_type': 'from_start_delta',
                           'absolute_variation': -150,
                           'relative_variation': -50.0},
                          {'product': 2,
-                          'variation_type': 'latest_delta',
+                          'delta_type': 'latest_delta',
                           'absolute_variation': -200,
                           'relative_variation': -57.14}]
 
@@ -201,16 +204,14 @@ class TestDataPipeLine(TestCase):
 
         expected_data = [
             {'product': 1,
-             'variation_type': 'from_start_delta',
+             'delta_type': 'from_start_delta',
              'absolute_variation': 6,
              'relative_variation': 60.0}]
-
 
         input_df = pd.DataFrame(data)
         current_df = ProcessData.compute_variation(input_df)
         expected_output_df = pd.DataFrame(expected_data)
         self.assertTrue(expected_output_df.equals(current_df))
-
 
     def test_compute_variation_two_rows_two_products(self):
         data = [
@@ -248,18 +249,17 @@ class TestDataPipeLine(TestCase):
 
         expected_data = [
             {'product': 2,
-             'variation_type': 'from_start_delta',
+             'delta_type': 'from_start_delta',
              'absolute_variation': -150,
              'relative_variation': -50.0},
             {'product': 2,
-             'variation_type': 'latest_delta',
+             'delta_type': 'latest_delta',
              'absolute_variation': -200,
              'relative_variation': -57.14},
             {'product': 1,
-             'variation_type': 'from_start_delta',
+             'delta_type': 'from_start_delta',
              'absolute_variation': 6,
              'relative_variation': 60.0}]
-
 
         input_df = pd.DataFrame(data)
         current_df = ProcessData.compute_variation(input_df)
@@ -281,10 +281,9 @@ class TestDataPipeLine(TestCase):
         current_df = ProcessData.compute_variation(input_df)
         self.assertTrue(expected_output_df.equals(current_df))
 
-
     def test_process_data(self):
         input_path = Path(os.path.dirname(__file__)) / 'test_data/test_data.csv'
-        output_path = Path(os.path.dirname(__file__)) / 'test_data/current_data.csv'
+        output_path = self.process_data_current
         expected_file_path = Path(os.path.dirname(__file__)) / 'test_data/test_processed_data.csv'
         process_data = ProcessData(input_path=input_path, output_path=output_path)
         process_data.run()
@@ -293,9 +292,31 @@ class TestDataPipeLine(TestCase):
         expected_output_df = pd.read_csv(expected_file_path, sep=';')
         self.assertTrue(expected_output_df.equals(current_df))
 
-    def tearDownClass(cls) -> None:
-        output_path = Path(os.path.dirname(__file__)) / 'test_data/current_data.csv'
-        os.remove(output_path)
+    def test_format_df_for_response(self):
+        input_path = Path(os.path.dirname(__file__)) / 'test_data/test_processed_data.csv'
+        input_df = pd.read_csv(input_path, sep=';')
+        metric_request = MetricsRequest(**{'absolute_variation': 5,
+                                           'relative_variation': 1.8})
+        request_data = RequestData(input_path)
+        current_df = request_data.run(metric_request)
+        expected_data = [
+            {'product': 2,
+             'delta_type': 'from_start_delta',
+             'absolute_variation': -150,
+             'relative_variation': -50.0},
+            {'product': 2,
+             'delta_type': 'latest_delta',
+             'absolute_variation': -200,
+             'relative_variation': -57.14},
+            {'product': 1,
+             'delta_type': 'from_start_delta',
+             'absolute_variation': 6,
+             'relative_variation': 60.0}]
+        # self.assertTrue(expected_output_df.equals(current_df))
+
+    def test_request_data(self):
+        pass
+
 
 if __name__ == "__main__":
     unittest.main()

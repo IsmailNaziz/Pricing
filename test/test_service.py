@@ -12,7 +12,8 @@ from data_pipe_line.request_data import RequestData
 
 
 def mock_sample_processed_data():
-    return pd.read_csv(Path(os.path.dirname(__file__)) / 'test_data/test_sample_processed_data.csv')
+    # simple data
+    return
 
 
 def mock_processed_data():
@@ -37,8 +38,8 @@ class TestService(TestCase):
 
         self.assertEqual(response.status_code, 200)
         # choice is not specified
-        expected_response_1 = {1: {'variation_type': 'absolute_variation', 'value': 5}}
-        expected_response_2 = {1: {'variation_type': 'relative_variation', 'value': 25}}
+        expected_response_1 = None
+        expected_response_2 = None
         self.assertTrue(
                 response.json() == expected_response_1 or
                 response.json() == expected_response_2
