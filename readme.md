@@ -12,6 +12,7 @@ dates are selected (from_start_delta or latest_delta).
 # Assumption 
 percentage is rounded to 2 for processing
 A same date cannot appear twice for the same product
+from_start_delta will be applied if two rows only are provided
 
 
 

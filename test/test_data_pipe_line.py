@@ -56,219 +56,230 @@ class TestDataPipeLine(TestCase):
                 'activity_date': datetime.strptime('01/10/2021', self.date_format),
                 'product': 1,
                 'price': 10,
+                'rank': 1.0
             },
             {
                 'activity_date': datetime.strptime('01/11/2021', self.date_format),
                 'product': 1,
                 'price': 28,
+                'rank': 2.0
             },
             {
                 'activity_date': datetime.strptime('12/2/2022', self.date_format),
                 'product': 1,
                 'price': 16,
+                'rank': 3.0
             },
         ]
-        cols_to_compare = ['activity_date', 'product', 'price']
         expected_output_df = pd.DataFrame(expected_data)
+        input_df = pd.DataFrame(data)
+        current_df = ProcessData.filter_dates(input_df)
         expected_output_df = self.post_process(expected_output_df)
-        df = pd.DataFrame(data)
-        current_df = ProcessData.filter_dates(df)
         current_df = self.post_process(current_df)
-        current_df = current_df[cols_to_compare]
         self.assertTrue(expected_output_df.equals(current_df))
 
 
     def test_compute_variation_empty_data(self):
         input_df = expected_output_df = pd.DataFrame()
         current_df = ProcessData.compute_variation(input_df)
-        self.assertTrue(expected_output_df.equals(current_df), "DataFrames are equal")
+        self.assertTrue(expected_output_df.equals(current_df))
 
     def test_compute_variation_one_product(self):
-        data = {
+        data = [
             {
                 'activity_date': datetime.strptime('01/10/2021', self.date_format),
                 'product': 1,
-                'price': 10
+                'price': 10,
+                'rank': 1.0
             },
             {
                 'activity_date': datetime.strptime('01/11/2021', self.date_format),
                 'product': 1,
-                'price': 28
+                'price': 28,
+                'rank': 2.0
             },
             {
                 'activity_date': datetime.strptime('12/2/2022', self.date_format),
                 'product': 1,
-                'price': 16
+                'price': 16,
+                'rank': 3.0
             },
-        }
-        expected_data = {
-            {
-                'product': 1,
-                'variation_type': 'absolute_variation',
-                'delta_type': 'from_start_delta',
-                'value': 6,
-            },
-            {
-                'product': 1,
-                'variation_type': 'relative_variation',
-                'delta_type': 'from_start_delta',
-                'value': 60,
-            },
-            {
-                'product': 1,
-                'variation_type': 'absolute_variation',
-                'delta_type': 'latest_delta',
-                'value': -12,
-            },
-            {
-                'product': 1,
-                'variation_type': 'relative_variation',
-                'delta_type': 'latest_delta',
-                'value': -75,
-            },
-        }
+        ]
+        expected_data = [
+            {'product': 1,
+             'variation_type': 'from_start_delta',
+             'absolute_variation': 6,
+             'relative_variation': 60.0},
+            {'product': 1,
+             'variation_type': 'latest_delta',
+             'absolute_variation': -12,
+             'relative_variation': -42.86}
+        ]
 
         input_df = pd.DataFrame(data)
         current_df = ProcessData.compute_variation(input_df)
         expected_output_df = pd.DataFrame(expected_data)
-        self.assertTrue(expected_output_df.equals(current_df), "DataFrames are equal")
+        self.assertTrue(expected_output_df.equals(current_df))
 
     def test_compute_variation_two_products(self):
-        data = {
+        data = [
             {
                 'activity_date': datetime.strptime('01/10/2021', self.date_format),
                 'product': 1,
-                'price': 10
+                'price': 10,
+                'rank': 1.0
             },
             {
                 'activity_date': datetime.strptime('01/11/2021', self.date_format),
                 'product': 1,
-                'price': 28
+                'price': 28,
+                'rank': 2.0
             },
             {
                 'activity_date': datetime.strptime('12/2/2022', self.date_format),
                 'product': 1,
-                'price': 16
+                'price': 16,
+                'rank': 3.0
             },
             {
                 'activity_date': datetime.strptime('12/10/2021', self.date_format),
                 'product': 2,
-                'price': 300
+                'price': 300,
+                'rank': 1.0
             },
             {
                 'activity_date': datetime.strptime('24/1/2022', self.date_format),
                 'product': 2,
-                'price': 350
+                'price': 350,
+                'rank': 2.0
             },
             {
                 'activity_date': datetime.strptime('1/6/2022', self.date_format),
                 'product': 2,
-                'price': 150
+                'price': 150,
+                'rank': 3.0
             },
-        }
+        ]
 
-        expected_data = {
-            {
-                'product': 1,
-                'variation_type': 'absolute_variation',
-                'delta_type': 'from_start_delta',
-                'value': 6,
-            },
-            {
-                'product': 1,
-                'variation_type': 'relative_variation',
-                'delta_type': 'from_start_delta',
-                'value': 60,
-            },
-            {
-                'product': 1,
-                'variation_type': 'absolute_variation',
-                'delta_type': 'latest_delta',
-                'value': -12,
-            },
-            {
-                'product': 1,
-                'variation_type': 'relative_variation',
-                'delta_type': 'latest_delta',
-                'value': -75,
-            },
-            {
-                'product': 2,
-                'variation_type': 'absolute_variation',
-                'delta_type': 'from_start_delta',
-                'value': -150,
-            },
-            {
-                'product': 2,
-                'variation_type': 'relative_variation',
-                'delta_type': 'from_start_delta',
-                'value': -50,
-            },
-            {
-                'product': 2,
-                'variation_type': 'absolute_variation',
-                'delta_type': 'latest_delta',
-                'value': -200,
-            },
-            {
-                'product': 2,
-                'variation_type': 'relative_variation',
-                'delta_type': 'latest_delta',
-                'value': -57.14,
-            },
-        }
+        expected_data = [{'product': 1,
+                          'variation_type': 'from_start_delta',
+                          'absolute_variation': 6,
+                          'relative_variation': 60.0},
+                         {'product': 1,
+                          'variation_type': 'latest_delta',
+                          'absolute_variation': -12,
+                          'relative_variation': -42.86},
+                         {'product': 2,
+                          'variation_type': 'from_start_delta',
+                          'absolute_variation': -150,
+                          'relative_variation': -50.0},
+                         {'product': 2,
+                          'variation_type': 'latest_delta',
+                          'absolute_variation': -200,
+                          'relative_variation': -57.14}]
+
         input_df = pd.DataFrame(data)
         current_df = ProcessData.compute_variation(input_df)
         expected_output_df = pd.DataFrame(expected_data)
-        self.assertTrue(expected_output_df.equals(current_df), "DataFrames are equal")
+        self.assertTrue(expected_output_df.equals(current_df))
 
     def test_compute_variation_two_rows(self):
-        data = {
+        data = [
             {
                 'activity_date': datetime.strptime('01/10/2021', self.date_format),
                 'product': 1,
-                'price': None
+                'price': 10,
+                'rank': 1.0
             },
             {
-                'activity_date': datetime.strptime('01/10/2021', self.date_format),
+                'activity_date': datetime.strptime('18/12/2021', self.date_format),
                 'product': 1,
-                'price': None
+                'price': 16,
+                'rank': 2.0
             },
-        }
+        ]
 
-        expected_data = {
-            {
-                'product': 1,
-                'variation_type': 'absolute_variation',
-                'delta_type': 'latest_delta',
-                'value': 0,
-            },
-            {
-                'product': 1,
-                'variation_type': 'relative_variation',
-                'delta_type': 'latest_delta',
-                'value': 0,
-            },
-        }
+        expected_data = [
+            {'product': 1,
+             'variation_type': 'from_start_delta',
+             'absolute_variation': 6,
+             'relative_variation': 60.0}]
+
 
         input_df = pd.DataFrame(data)
         current_df = ProcessData.compute_variation(input_df)
         expected_output_df = pd.DataFrame(expected_data)
-        self.assertTrue(expected_output_df.equals(current_df), "DataFrames are equal")
+        self.assertTrue(expected_output_df.equals(current_df))
 
-    def test_compute_variation_one_row(self):
-        data = {
+
+    def test_compute_variation_two_rows_two_products(self):
+        data = [
             {
                 'activity_date': datetime.strptime('01/10/2021', self.date_format),
                 'product': 1,
-                'price': None
+                'price': 10,
+                'rank': 1.0
             },
-        }
+            {
+                'activity_date': datetime.strptime('18/12/2021', self.date_format),
+                'product': 1,
+                'price': 16,
+                'rank': 2.0
+            },
+            {
+                'activity_date': datetime.strptime('12/10/2021', self.date_format),
+                'product': 2,
+                'price': 300,
+                'rank': 1.0
+            },
+            {
+                'activity_date': datetime.strptime('24/1/2022', self.date_format),
+                'product': 2,
+                'price': 350,
+                'rank': 2.0
+            },
+            {
+                'activity_date': datetime.strptime('1/6/2022', self.date_format),
+                'product': 2,
+                'price': 150,
+                'rank': 3.0
+            },
+        ]
+
+        expected_data = [
+            {'product': 2,
+             'variation_type': 'from_start_delta',
+             'absolute_variation': -150,
+             'relative_variation': -50.0},
+            {'product': 2,
+             'variation_type': 'latest_delta',
+             'absolute_variation': -200,
+             'relative_variation': -57.14},
+            {'product': 1,
+             'variation_type': 'from_start_delta',
+             'absolute_variation': 6,
+             'relative_variation': 60.0}]
+
+
+        input_df = pd.DataFrame(data)
+        current_df = ProcessData.compute_variation(input_df)
+        expected_output_df = pd.DataFrame(expected_data)
+        self.assertTrue(expected_output_df.equals(current_df))
+
+    def test_compute_variation_one_row(self):
+        data = [
+            {
+                'activity_date': datetime.strptime('01/10/2021', self.date_format),
+                'product': 1,
+                'price': 10,
+                'rank': 2.0
+            },
+        ]
 
         input_df = pd.DataFrame(data)
         expected_output_df = pd.DataFrame()
         current_df = ProcessData.compute_variation(input_df)
-        self.assertTrue(expected_output_df.equals(current_df), "DataFrames are equal")
+        self.assertTrue(expected_output_df.equals(current_df))
 
 
     def test_process_data(self):
@@ -280,8 +291,11 @@ class TestDataPipeLine(TestCase):
         self.assertTrue(Path(output_path).exists(), 'file successfully created')
         current_df = pd.read_csv(output_path, sep=';')
         expected_output_df = pd.read_csv(expected_file_path, sep=';')
-        self.assertTrue(expected_output_df.equals(current_df), "DataFrames are equal")
+        self.assertTrue(expected_output_df.equals(current_df))
 
+    def tearDownClass(cls) -> None:
+        output_path = Path(os.path.dirname(__file__)) / 'test_data/current_data.csv'
+        os.remove(output_path)
 
 if __name__ == "__main__":
     unittest.main()
