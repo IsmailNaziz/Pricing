@@ -301,11 +301,11 @@ class TestDataPipeLine(TestCase):
         current_data = request_data.run(metric_request)
         expected_data = [
             {'product': 12482,
-             'delta_type': 'delta_latest',
+             'delta_type': 'delta_from_start',
              'variation_type': 'relative_variation',
-             'value': 1.9},
+             'value': 7.0},
             {'product': 13123,
-             'delta_type': 'delta_latest',
+             'delta_type': 'delta_from_start',
              'variation_type': 'relative_variation',
              'value': 14.29}]
 

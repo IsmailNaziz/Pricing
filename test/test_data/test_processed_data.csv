@@ -1,6 +1,6 @@
 product;delta_type;absolute_variation;relative_variation
-12482;delta_latest;4;1.9
 12482;delta_from_start;14;7.0
-13123;delta_latest;15;14.29
+12482;delta_latest;4;1.9
 13123;delta_from_start;15;14.29
+13123;delta_latest;15;14.29
 23849;delta_from_start;1;0.47
