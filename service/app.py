@@ -6,22 +6,24 @@ from fastapi import FastAPI
 
 from data_pipe_line.process_data import ProcessData
 from data_pipe_line.request_data import RequestData
-from models import MetricsRequest, Variation
-
+from service.models import MetricsRequest, Variation
+from service.app_config import AppConfig
 app = FastAPI()
-PROCESSED_DATA_PATH = Path(os.path.dirname(__file__)).parent / 'data/processed_data.csv'
-DATA_PATH = Path(os.path.dirname(__file__)).parent / 'data/data.csv'
+
+processed_data_path = Path(os.path.dirname(__file__)).parent / 'data/processed_data.csv'
+data_path = Path(os.path.dirname(__file__)).parent / 'data/data.csv'
+app_config = AppConfig(processed_data_path=processed_data_path, data_path=data_path)
 
 
 def startup_preparation():
-    process_data = ProcessData(input_path=DATA_PATH, output_path=PROCESSED_DATA_PATH)
+    process_data = ProcessData(input_path=app_config.data_path, output_path=app_config.processed_data_path)
     process_data.run()
 
 
 
 @app.post("/products-variation")
 def products_variation(metric_request: MetricsRequest) -> list[Variation]:
-    request_data = RequestData(PROCESSED_DATA_PATH)
+    request_data = RequestData(app_config.processed_data_path)
     return request_data.run(metric_request)
 
 

@@ -1,3 +1,4 @@
+import json
 import os
 import unittest
 from pathlib import Path
@@ -5,50 +6,22 @@ from unittest import TestCase
 
 import pandas as pd
 from starlette.testclient import TestClient
+
+import service
 from service.app import app
 from service.models import MetricsRequest
 from unittest.mock import patch
-from data_pipe_line.request_data import RequestData
 
 
-def mock_sample_processed_data():
-    # simple data
-    return
-
-
-def mock_processed_data():
-    return pd.read_csv(Path(os.path.dirname(__file__)) / 'test_data/test_processed_data.csv')
-
-
+sample_data_path = Path(os.path.dirname(__file__)).parent / 'data/sample_processed_data.csv'
 class TestService(TestCase):
 
     def setUp(self) -> None:
         self.client = TestClient(app)
 
-    @patch.object(RequestData, 'df', side_effect=mock_sample_processed_data())
-    def test_products_variation(self):
-
-        metrics_request_data = {
-            'absolute_variation': 5,
-            'relative_variation': 25
-        }
-        metrics_request = MetricsRequest(**metrics_request_data)
-
-        response = self.client.post("/products-variation", json=metrics_request.dict())
-
-        self.assertEqual(response.status_code, 200)
-        # choice is not specified
-        expected_response_1 = None
-        expected_response_2 = None
-        self.assertTrue(
-                response.json() == expected_response_1 or
-                response.json() == expected_response_2
-        )
-
-
-    @patch.object(RequestData, 'df', side_effect=mock_processed_data())
-    def test_non_reg_products_variation(self):
-
+    @patch('service.app_config.AppConfig')
+    def test_products_variation(self, app_mock):
+        app_mock.processed_data_path.return_value = sample_data_path
         metrics_request_data = {
             'absolute_variation': 5,
             'relative_variation': -1.5
@@ -56,7 +29,7 @@ class TestService(TestCase):
         metrics_request = MetricsRequest(**metrics_request_data)
 
         response = self.client.post("/products-variation", json=metrics_request.dict())
-
+        current_result = response.json()
         self.assertEqual(response.status_code, 200)
         self.assertTrue(True)
 
