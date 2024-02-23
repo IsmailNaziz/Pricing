@@ -58,19 +58,20 @@ an ambiguity to chose between the two values)
 
 # Examples
 ## Json example
-### These are valid jsons of input for the service:     
-{  
-'absolute_variation': 5,  
-'relative_variation': 2.5  
-  }
----
-{  
-'absolute_variation': 5,  
-  }
----
-{  
-'relative_variation': -1.2,  
-  }
+
+### These are valid jsons of input for the service:
+
+{ 'absolute_variation': 5,  
+'relative_variation': 2.5 } 
+
+--- 
+{ 'absolute_variation': 5, } 
+
+--- 
+{ 
+'relative_variation': -1.2, 
+}
+
 ---
 {  
 'absolute_variation': null,  
@@ -78,24 +79,32 @@ an ambiguity to chose between the two values)
   }
 
 
-### These are invalid jsons:     
+### These are invalid jsons:       
+
 {   
 'dummy_key': 54  
-  }  
+  }
+  
 because the key is not absolute_variation nor relative_variation
+
 ---
+
 {  
 'absolute_variation': null,  
 'relative_variation': null  
   }  
+  
 because at least one of the keys should be not null
+
 ---
 {  
 'absolute_variation': 51,  
 'relative_variation': 'dummy_string'  
   }  
+  
 because one the keys is not in the right type (here, it would be interesting to discuss with consumers of the service
 to set rules ex: ignore if error for one of the keys)
+
 ---
 {  
 'absolute_variation': '51$',  
@@ -116,8 +125,7 @@ where 1 is the product id.
 For an input of this type:
 {
 'absolute_variation': 5,
-'relative_variation': 25   
-}
+'relative_variation': 25   }
 
 The output will be (or any other possibility that matches the criteria)
 [{'product': 1, 'variation_type': 'absolute_variation', 'value': 15.0, 'delta_type': 'delta_from_start'}]
@@ -129,6 +137,7 @@ The data in this context is clean.
 prices are always ints (No units)  
 dates are all in the same format dd/mm/yyyy  
 ids are always ints  
+However, in real conditions a step of datacleaning should be consideredf first.
 
 # Improvements 
 Integrate proper logging system
