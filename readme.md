@@ -100,14 +100,14 @@ where 1 is the product id.
 
 For an input of this type:
 {
-{'absolute_variation': 5,
+'absolute_variation': 5,
 'relative_variation': 25   
 }
 
-The output will be   
-[{'product': 1, 'variation_type': 'absolute_variation', 'value': 5, 'delta_type': 'delta_latest'}]
-or 
-['product': 1, 'variation_type': 'relative_variation', 'value': 25, 'delta_type':'delta_from_start']
+The output will be (or any other possibility that matches the criteria)
+[{'product': 1, 'variation_type': 'absolute_variation', 'value': 15.0, 'delta_type': 'delta_from_start'}]
+
+
 
 
 # Remarks

@@ -15,7 +15,7 @@ data_path = Path(os.path.dirname(__file__)).parent / 'data/data.csv'
 app_config = AppConfig(processed_data_path=processed_data_path, data_path=data_path)
 
 
-def startup_preparation():
+def startup_preparation(app_config):
     process_data = ProcessData(input_path=app_config.data_path, output_path=app_config.processed_data_path)
     process_data.run()
 
@@ -28,5 +28,5 @@ def products_variation(metric_request: MetricsRequest) -> list[Variation]:
 
 
 if __name__ == "__main__":
-    startup_preparation()
+    startup_preparation(app_config)
     uvicorn.run(app, host="0.0.0.0", port=8080)
