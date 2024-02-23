@@ -13,11 +13,26 @@ dates are selected (delta_from_start or delta_latest).
 percentage is rounded to 2 for processing
 A same date cannot appear twice for the same product
 delta_from_start will be applied if two rows only are provided
-
+TODO: to be filled
 
 
 # How to run it: 
-TODO: to be filled
+How it works ? 
+First there is a step of data preparation that takes few seconds => we compute in advance the variations
+With the service, we request the data in a specific format
+To run the application: 
+install requirements using this command in your env: 
+1) place yourself in root directory cd directory
+2) run this command: pip install requirements.txt 
+3) run this command: python.exe service/app.py
+
+You can now query the service in the route: http://localhost:8080  
+Make sure the port is not used by another app 
+You can use tools like Postman or Bruno   
+Or, you can use the custom script run_request.py after changing request.json with your request input (See next section).
+Obviously, the server must be launched. The result of the query will be truncated to the first 100 records in a json named result.json
+if you want more records, modify the script
+
 
 
 # I/O
@@ -109,7 +124,6 @@ The output will be (or any other possibility that matches the criteria)
 
 
 
-
 # Remarks
 The data in this context is clean.   
 prices are always ints (No units)  
@@ -117,6 +131,7 @@ dates are all in the same format dd/mm/yyyy
 ids are always ints  
 
 # Improvements 
+Integrate proper logging system
 In order to add new data, we can process new file to keep only 3 rows per product id:   
 start date, before last date, end date  
 there for we can work by ingesting data progressively without having to recompute everything  
